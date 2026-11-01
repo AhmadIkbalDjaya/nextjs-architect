@@ -75,6 +75,10 @@ Apply these extraction rules:
 - More than 3 `useState` + `useEffect` in one component → extract to custom hook.
 - Inline event handler exceeding 5 lines → move logic to hook.
 - Related state and effects that form a logical unit → group into one hook.
+- A hook that mixes more than 2 distinct concerns (e.g., pagination + CRUD + audio playback + form state) → split into separate hooks, one per concern.
+- A hook that returns more than 10 values → candidate for split by concern.
+- When splitting a large hook, a composing hook may call the sub-hooks and aggregate their return values. Each sub-hook must be in its own file.
+- Hooks must not re-export types, utilities, or other modules. Consumers import those directly from `_types/`, `_utils/`, etc.
 
 ### 2.4 Service extractions
 
@@ -172,7 +176,10 @@ Perform changes in this order:
 1. Move state logic, effects, and handlers to `_hooks/useFeatureName.ts`.
 2. Hooks import from `_services/` for API calls instead of calling APIs directly.
 3. Each hook file exports exactly one hook as a named export.
-4. Export them from `_hooks/index.ts`.
+4. Split large hooks by concern: each distinct concern (data fetching, pagination, search/filter, form/CRUD, delete, audio playback, status toggle, etc.) becomes its own hook file.
+5. When sub-hooks need to be composed, create a parent hook that calls them and aggregates their return values. The parent hook file is separate from the sub-hook files.
+6. Hooks must not re-export types, utilities, or other modules. Remove any re-exports; consumers import directly from `_types/`, `_utils/`, etc.
+7. Export all hooks from `_hooks/index.ts`.
 
 ### 4.4 Extract components
 1. Move each component to `_components/ComponentName.tsx`.

@@ -82,6 +82,9 @@ Example:
 | JSX nesting > 3 levels | Extract inner blocks |
 | > 1 component per file | Split into separate files |
 | > 3 useState/useEffect | Extract to custom hook |
+| Hook mixes > 2 concerns | Split into separate hooks per concern |
+| Hook returns > 10 values | Candidate for split by concern |
+| Hook re-exports types/utils | Remove re-exports, import directly |
 | Inline handler > 5 lines | Move logic to hook |
 | fetch/axios/API call in component | Move to `_services/` |
 | `"use client"` without interactivity | Remove directive |
