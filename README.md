@@ -49,13 +49,13 @@ Directories prefixed with `_` are ignored by Next.js App Router routing.
 Run from the target project root:
 
 ```sh
-npx skills add makkio-id/nextjs-architect -a opencode -a claude-code -a codex -y
+npx skills add AhmadIkbalDjaya/nextjs-architect -a opencode -a claude-code -a codex -y
 ```
 
 Install for one agent by specifying only that agent. For example:
 
 ```sh
-npx skills add makkio-id/nextjs-architect -a opencode -y
+npx skills add AhmadIkbalDjaya/nextjs-architect -a opencode -y
 ```
 
 Omit `-y` to choose installation options interactively. To update the skill, run the install command again.
