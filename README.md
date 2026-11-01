@@ -8,6 +8,7 @@ Built using the open [Agent Skills](https://agentskills.io) format.
 
 - Scans a target directory and inventories all components, hooks, API calls, and their relationships.
 - Splits large components into small, focused, single-responsibility components in `_components/`.
+- Groups components with ≥3 exclusive sub-components into dedicated subdirectories inside `_components/`.
 - Extracts stateful logic and side effects into custom hooks in `_hooks/`.
 - Moves API calls into dedicated service files in `_services/`.
 - Extracts shared TypeScript types into `_types/` when applicable.
@@ -25,6 +26,11 @@ target-directory/
   _components/
     ComponentA.tsx
     ComponentB.tsx
+    component-c/
+      index.ts
+      ComponentC.tsx
+      SubComponentD.tsx
+      SubComponentE.tsx
     index.ts
   _hooks/
     useFeatureData.ts
@@ -80,6 +86,7 @@ Example:
 | fetch/axios/API call in component | Move to `_services/` |
 | `"use client"` without interactivity | Remove directive |
 | Component used across routes | Suggest `_shared/` relocation |
+| ≥3 exclusive sub-components | Group into subdirectory with private barrel |
 
 ## Skill Contents
 

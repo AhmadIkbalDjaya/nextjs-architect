@@ -48,6 +48,21 @@ Apply these splitting rules:
 - A single file exports more than 1 React component → split into separate files.
 - Repeated JSX patterns → extract into reusable component.
 
+### 2.2.1 Component grouping
+
+After identifying all splits, detect components that should be grouped into a subdirectory inside `_components/`:
+
+- **Trigger:** A parent component has ≥3 sub-components that are exclusively used by that parent (imported only by that one component, nowhere else in the codebase).
+- **Action:** Create a subdirectory named after the parent component file (without extension, e.g., `music-library.tsx` → `music-library/`). Move the parent component and all its exclusive sub-components into this subdirectory.
+- **Barrel export:** The subdirectory `index.ts` exports only the parent component. Sub-components are private implementation details.
+- **Recursive grouping:** If a sub-component inside a group also has ≥3 exclusive sub-components of its own, nest another subdirectory within the group. Apply the same rules recursively.
+- **Escape hatch:** If a previously-exclusive sub-component later needs to be used outside its parent, move it out of the group directory back to the root `_components/` level and update all imports.
+
+For each proposed group, list:
+- Parent component name.
+- Exclusive sub-components that will be grouped with it.
+- The resulting subdirectory structure.
+
 ### 2.3 Hook extractions
 
 For each hook extraction:
@@ -99,6 +114,12 @@ target-directory/
   _components/
     ComponentA.tsx
     ComponentB.tsx
+    component-c/           (grouped: ComponentC has ≥3 exclusive sub-components)
+      index.ts             (exports only ComponentC)
+      ComponentC.tsx
+      SubComponentD.tsx
+      SubComponentE.tsx
+      SubComponentF.tsx
     index.ts
   _hooks/
     useFeatureData.ts
@@ -160,6 +181,17 @@ Perform changes in this order:
 4. Components receive data via props; define props interface in the same file unless shared.
 5. Export them from `_components/index.ts`.
 
+### 4.4.1 Group components into subdirectories
+
+After extracting all components, apply grouping:
+
+1. For each component that has ≥3 exclusive sub-components (sub-components imported only by that parent), create a subdirectory inside `_components/` named after the parent file (without extension).
+2. Move the parent component file and all its exclusive sub-components into the subdirectory.
+3. Create `index.ts` inside the subdirectory that exports only the parent component.
+4. Update all internal imports within the group to use relative paths (e.g., `./sub-component`).
+5. If recursive grouping applies (a sub-component inside a group also qualifies), create nested subdirectories following the same pattern.
+6. The root `_components/index.ts` re-exports from each subdirectory's `index.ts` so external consumers are unaffected.
+
 ### 4.5 Simplify the original file
 1. The entry file (`page.tsx`, `index.tsx`, or the original component file) should compose extracted components.
 2. Minimal code: imports + composition + layout. No inline logic, no API calls, no complex state.
@@ -172,6 +204,7 @@ Perform changes in this order:
 ### 4.7 Create barrel exports
 1. Each `_components/`, `_hooks/`, `_services/`, `_types/`, `_utils/` directory gets an `index.ts`.
 2. Re-export all public members from their respective files.
+3. For grouped component subdirectories inside `_components/`: the subdirectory `index.ts` exports only the parent component (sub-components are private). The root `_components/index.ts` re-exports from each subdirectory's barrel.
 
 ### 4.8 Update all imports
 1. Update every file that imported from the original locations.
