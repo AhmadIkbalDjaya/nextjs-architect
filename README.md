@@ -8,7 +8,7 @@ Built using the open [Agent Skills](https://agentskills.io) format.
 
 - Scans a target directory and inventories all components, hooks, API calls, and their relationships.
 - Splits large components into small, focused, single-responsibility components in `_components/`.
-- Groups components with ≥3 exclusive sub-components into dedicated subdirectories inside `_components/`.
+- Groups components with ≥3 exclusive sub-components into dedicated subdirectories inside `_components/`, including transitive dependencies used only within the group.
 - Extracts stateful logic and side effects into custom hooks in `_hooks/`.
 - Moves API calls into dedicated service files in `_services/`.
 - Extracts shared TypeScript types into `_types/` when applicable.
@@ -90,6 +90,7 @@ Example:
 | `"use client"` without interactivity | Remove directive |
 | Component used across routes | Suggest `_shared/` relocation |
 | ≥3 exclusive sub-components | Group into subdirectory with private barrel |
+| Sub-component used only within a group | Move into group directory (transitive inclusion) |
 
 ## Skill Contents
 

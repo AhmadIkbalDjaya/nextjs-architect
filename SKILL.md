@@ -53,7 +53,8 @@ Apply these splitting rules:
 After identifying all splits, detect components that should be grouped into a subdirectory inside `_components/`:
 
 - **Trigger:** A parent component has ≥3 sub-components that are exclusively used by that parent (imported only by that one component, nowhere else in the codebase).
-- **Action:** Create a subdirectory named after the parent component file (without extension, e.g., `music-library.tsx` → `music-library/`). Move the parent component and all its exclusive sub-components into this subdirectory.
+- **Transitive inclusion:** If a sub-component (B) is exclusively used by another sub-component (A) that is being grouped, B must also move into the same group directory — even if B is not directly imported by the parent. Apply recursively: any component exclusively used within the group belongs in the group.
+- **Action:** Create a subdirectory named after the parent component file (without extension, e.g., `music-library.tsx` → `music-library/`). Move the parent component and all its exclusive sub-components (including transitive ones) into this subdirectory.
 - **Barrel export:** The subdirectory `index.ts` exports only the parent component. Sub-components are private implementation details.
 - **Recursive grouping:** If a sub-component inside a group also has ≥3 exclusive sub-components of its own, nest another subdirectory within the group. Apply the same rules recursively.
 - **Escape hatch:** If a previously-exclusive sub-component later needs to be used outside its parent, move it out of the group directory back to the root `_components/` level and update all imports.
@@ -186,7 +187,7 @@ Perform changes in this order:
 2. One component per file. File name matches component name in PascalCase.
 3. Components import hooks from `_hooks/` for logic, not inline.
 4. Components receive data via props; define props interface in the same file unless shared.
-5. Export them from `_components/index.ts`.
+5. Export them from `_components/index.ts`. This barrel will be revised in §4.4.1 after grouping — components moved into subdirectories will be removed from the root barrel and only the parent component will be re-exported via the subdirectory barrel.
 
 ### 4.4.1 Group components into subdirectories
 
@@ -194,10 +195,12 @@ After extracting all components, apply grouping:
 
 1. For each component that has ≥3 exclusive sub-components (sub-components imported only by that parent), create a subdirectory inside `_components/` named after the parent file (without extension).
 2. Move the parent component file and all its exclusive sub-components into the subdirectory.
-3. Create `index.ts` inside the subdirectory that exports only the parent component.
-4. Update all internal imports within the group to use relative paths (e.g., `./sub-component`).
-5. If recursive grouping applies (a sub-component inside a group also qualifies), create nested subdirectories following the same pattern.
-6. The root `_components/index.ts` re-exports from each subdirectory's `index.ts` so external consumers are unaffected.
+3. For each sub-component being moved, check if it has its own exclusive dependencies (components only imported by members of this group). Move those into the group directory as well. Repeat until no more transitive exclusive dependencies remain.
+4. Create `index.ts` inside the subdirectory that exports only the parent component.
+5. Update all internal imports within the group to use relative paths (e.g., `./sub-component`).
+6. If recursive grouping applies (a sub-component inside a group also qualifies), create nested subdirectories following the same pattern.
+7. Update `_components/index.ts`: remove direct exports of all components that were moved into a subdirectory. Replace them with a single re-export from the subdirectory's `index.ts`. Only the parent component should be visible to external consumers.
+8. The root `_components/index.ts` re-exports from each subdirectory's `index.ts` so external consumers are unaffected.
 
 ### 4.5 Simplify the original file
 1. The entry file (`page.tsx`, `index.tsx`, or the original component file) should compose extracted components.
