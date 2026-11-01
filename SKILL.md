@@ -1,9 +1,9 @@
 ---
-name: nextjs-react-refactor
+name: nextjs-architect
 description: Refactor Next.js/React directories by splitting large components, extracting hooks and services, optimizing "use client" boundaries, and enforcing one-component-per-file with colocation best practices.
 ---
 
-# Next.js / React Refactor
+# Next.js Architect
 
 Refactor a user-specified directory in a Next.js or React project. Split large components, extract logic into hooks, move API calls to services, optimize `"use client"` boundaries, and enforce one-component-per-file. Adapt to the project's conventions, framework version, and tooling. Do not assume a specific package manager, styling approach, or state management library.
 

@@ -1,4 +1,4 @@
-# Next.js / React Refactor
+# Next.js Architect
 
 Agent skill that refactors Next.js and React directories by splitting large components, extracting hooks and services, optimizing `"use client"` boundaries, and enforcing one-component-per-file with colocation best practices.
 
@@ -49,24 +49,24 @@ Directories prefixed with `_` are ignored by Next.js App Router routing.
 Run from the target project root:
 
 ```sh
-npx skills add makkio-id/nextjs-react-refactor -a opencode -a claude-code -a codex -y
+npx skills add makkio-id/nextjs-architect -a opencode -a claude-code -a codex -y
 ```
 
 Install for one agent by specifying only that agent. For example:
 
 ```sh
-npx skills add makkio-id/nextjs-react-refactor -a opencode -y
+npx skills add makkio-id/nextjs-architect -a opencode -y
 ```
 
 Omit `-y` to choose installation options interactively. To update the skill, run the install command again.
 
 ## Usage
 
-Invoke the `nextjs-react-refactor` skill from within your project and tag the directory you want to refactor. The agent scans all files, builds a complete refactor plan with component splits, hook extractions, service extractions, and `"use client"` optimizations, then asks for confirmation before making any changes.
+Invoke the `nextjs-architect` skill from within your project and tag the directory you want to refactor. The agent scans all files, builds a complete refactor plan with component splits, hook extractions, service extractions, and `"use client"` optimizations, then asks for confirmation before making any changes.
 
 Example:
 
-> Refactor the `app/dashboard/` directory using the nextjs-react-refactor skill.
+> Refactor the `app/dashboard/` directory using the nextjs-architect skill.
 
 ## Refactor Rules
 
